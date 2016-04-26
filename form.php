@@ -96,13 +96,9 @@ function h($s)
             お問い合わせ内容 <span class="required">(必須)</span>
             </td>
             <td class="input_2">
-            <textarea name="content"
+            <textarea name="content" placeholder="入力してください｡" align="left" class="input_inquiry">
             <?php if(!empty($content)) : ?>
-            value="<?php echo h($content)?>"
-            <?php endif; ?>
-            class="input_inquiry">
-            <?php if(empty($content)) : ?>
-            <?php echo 'ここに内容を入力してください｡' ?>
+            <?php echo trim(h($content))?>
             <?php endif; ?>
             </textarea>
             </td>

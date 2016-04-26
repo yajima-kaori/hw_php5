@@ -33,7 +33,7 @@ $errors = array();
           {
             $errors['type'] = '種類を選択してください｡';
           }
-          if($email == '')
+          if($content == '')
           {
             $errors['content'] = 'お問い合わせ内容を入力してください｡';
           }
@@ -162,12 +162,13 @@ $errors = array();
             お問い合わせ内容 <span class="required">(必須)</span>
             </td>
             <td class="input_2">
-            <textarea name="content"
+            <label>
+            <textarea name="content" class="input_inquiry">
             <?php if(!empty($content)) :?>
-              value="<?php echo h($content); ?>"
+            <?php echo trim(h($content)); ?>
             <?php endif; ?>
-            class="input_inquiry">
             </textarea>
+            </label>
             <?php if(empty($content)) :?>
             <span class="errors"><?php echo $errors['content']; ?> </span>
             <?php endif;?>
