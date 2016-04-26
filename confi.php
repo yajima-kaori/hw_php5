@@ -166,7 +166,11 @@ $errors = array();
             <?php if(!empty($content)) :?>
               value="<?php echo h($content); ?>"
             <?php endif; ?>
-            class="input_inquiry"></textarea>
+            class="input_inquiry">
+            </textarea>
+            <?php if(empty($content)) :?>
+            <span class="errors"><?php echo $errors['content']; ?> </span>
+            <?php endif;?>
             </td>
           </tr>
        </table>
