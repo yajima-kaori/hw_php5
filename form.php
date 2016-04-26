@@ -1,48 +1,23 @@
 <?php
 
+
+
+if($_SERVER['REQUEST_METHOD'] === 'POST')
+{
+  $name = $_POST['name'];
+  $email = $_POST['email'];
+  $type = $_POST['type'];
+  $content = $_POST['content'];
+
+// var_dump($content);
+}
+
+
 function h($s)
 {
   return htmlspecialchars($s, ENT_QUOTES, "UTF-8");
 }
 
-if(!empty($_POST))
-{
-
-$name = $_POST['name'];
-$email = $_POST['email'];
-$type = $_POST['type'];
-$content = $_POST['content'];
-
-}
-
-
-$errors = array();
-
-
-    if($_SERVER['REQUEST_METHOD'] === 'POST')
-    {
-        $name = $_POST['name'];
-        $email = $_POST['email'];
-        $type = $_POST['type'];
-        $content = $_POST['content'];
-
-          if($name == '')
-          {
-             return $errors['name'] = 'お名前を入力してください｡';
-          }
-          if($email == '')
-          {
-            return $errors['email'] = 'メールアドレスを入力してください｡';
-          }
-          if($type == '')
-          {
-            return $errors['type'] = '種類を選択してください｡';
-          }
-          if($email == '')
-          {
-            return $errors['content'] = 'お問い合わせ内容を入力してください｡';
-          }
-    }
 
 
 
@@ -67,32 +42,52 @@ $errors = array();
           <tr>
           <td class="item">お名前 <span class="required">(必須)</span></td>
             <td class="input"><input type="text" name="name"
-            value="<?php if(!empty($name)): ?>
-                   <?php echo h($name) ?>
-                   <?php endif; ?>"
+            <?php if(!empty($name)) : ?>
+            value="<?php echo h($name)?>"
+            <?php endif; ?>
             class="input_name"></td>
           </tr>
           <tr>
             <td class="item">メールアドレス <span class="required">(必須)</span></td>
             <td class="input"><input type="email" name="email"
-            value="<?php if(!empty($email)): ?>
-                   <?php echo h($email) ?>
-                   <?php endif; ?>"
-                   class="input_email"></td>
+            <?php if(!empty($email)) : ?>
+            value="<?php echo h($email)?>"
+            <?php endif; ?>
+            class="input_email"></td>
           </tr>
           <tr>
           <td class="item">種類 <span class="required">(必須)</span>
           </td>
           <td class="input">
-            <select name="type"
-            alue="<?php if(!empty($type)): ?>
-                   <?php echo h($type) ?>
-                   <?php endif; ?>"
-                   class="input_type">
-            <option value="商品について">商品について</option>
-            <option value="お支払いについて">お支払いについて</option>
-            <option value="当サイトについて">当サイトについて</option>
-            <option value="その他">その他</option>
+            <select name="type" class="input_type">
+            <option value="商品について"
+            <?php if(!empty($type)) : ?>
+            <?php if($type == "商品について"): ?>
+            selected
+            <?php endif; ?>
+            <?php endif; ?>
+            >商品について</option>
+            <option value="お支払いについて"
+            <?php if(!empty($type)) : ?>
+            <?php if($type == "お支払いについて"): ?>
+            selected
+            <?php endif; ?>
+            <?php endif; ?>
+            >お支払いについて</option>
+            <option value="当サイトについて"
+            <?php if(!empty($type)) : ?>
+            <?php if($type == "当サイトについて"): ?>
+            selected
+            <?php endif; ?>
+            <?php endif; ?>
+            >当サイトについて</option>
+            <option value="その他"
+            <?php if(!empty($type)) : ?>
+            <?php if($type == "その他"): ?>
+            selected
+            <?php endif; ?>
+            <?php endif; ?>
+            >その他</option>
             </select>
           </td>
           </tr>
@@ -102,10 +97,14 @@ $errors = array();
             </td>
             <td class="input_2">
             <textarea name="content"
-            value="<?php if(!empty($content)): ?>
-                   <?php echo h($content) ?>
-                   <?php endif; ?>"
-                   class="input_inquiry"></textarea>
+            <?php if(!empty($content)) : ?>
+            value="<?php echo h($content)?>"
+            <?php endif; ?>
+            class="input_inquiry">
+            <?php if(empty($content)) : ?>
+            <?php echo 'ここに内容を入力してください｡' ?>
+            <?php endif; ?>
+            </textarea>
             </td>
           </tr>
        </table>

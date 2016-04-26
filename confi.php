@@ -11,36 +11,36 @@ function h($s)
   return htmlspecialchars($s, ENT_QUOTES, "UTF-8");
 }
 
-$fileName = "data.csv";
+//バリデーション
+$errors = array();
 
-if($_SERVER['REQUEST_METHOD'] === 'POST')
-{
-
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $type = $_POST['type'];
-    $content = $_POST['content'];
-
-    if($name != '' && $email != '' && $type != '' && $content != '')
+    if($_SERVER['REQUEST_METHOD'] === 'POST')
     {
-      $data = $name . ',' . $email . ',' . $type . ',' . $content . "\n" ;
+        $name = $_POST['name'];
+        $email = $_POST['email'];
+        $type = $_POST['type'];
+        $content = $_POST['content'];
 
-          if(!$fp = fopen($fileName,"a"))
+          if($name == '')
           {
-            echo 'open失敗';
+          $errors['name'] = 'お名前を入力してください｡';
           }
-          if(fwrite($fp,$data) === false)
+          if($email == '')
           {
-            echo '書き込み失敗';
+            $errors['email'] = 'メールアドレスを入力してください｡';
           }
-        fclose($fp);
+          if($type == '')
+          {
+            $errors['type'] = '種類を選択してください｡';
+          }
+          if($email == '')
+          {
+            $errors['content'] = 'お問い合わせ内容を入力してください｡';
+          }
     }
-}
-
-
-
 
 ?>
+
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -53,12 +53,13 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
   <body>
       <h1>お問い合わせ</h1>
 
+      <?php if(empty($errors)) : ?>
       <div>
-      <form action="completion.php" method="post">
         <table>
           <tr>
           <td class="item">お名前</td>
-            <td class="confi_input"><?php echo h($name); ?></td>
+            <td class="confi_input"><?php echo h($name);?></td>
+            </td>
           </tr>
           <tr>
             <td class="item">メールアドレス</td>
@@ -80,24 +81,102 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
             </td>
           </tr>
        </table>
-       <div class="submit_botton clearfix">
+      <form action="completion.php" method="post">
+      <input type="hidden" name="name" value="<?php echo h($name); ?>">
+       <input type="hidden" name="email" value="<?php echo h($email); ?>">
+       <input type="hidden" name="type" value="<?php echo h($type); ?>">
+       <input type="hidden" name="content" value="<?php echo h($content); ?>">
+       <div class="submit_botton">
        <input type="submit" value="送信する" class="go">
        </div>
        </form>
 
        <form action="form.php" method="post">
-       <div class="submit_botton clearfix">
        <input type="hidden" name="name" value="<?php echo h($name); ?>">
        <input type="hidden" name="email" value="<?php echo h($email); ?>">
        <input type="hidden" name="type" value="<?php echo h($type); ?>">
        <input type="hidden" name="content" value="<?php echo h($content); ?>">
+        <div class="submit_botton">
        <input type="submit" value="戻る" class="back">
-      </div>
+        </div>
        </form>
+     <?php endif; ?>
 
-      </div>
+     <?php if(!empty($errors)) : ?>
+        <form action="confi.php" method="post">
+        <table>
+          <tr>
+          <td class="item">お名前 <span class="required">(必須)</span></td>
+            <td class="input"><input type="text" name="name"
+            <?php if(!empty($name)) :?>
+              value="<?php echo h($name); ?>"
+            <?php endif; ?>
+            class="input_name">
+            <?php if(empty($name)) :?>
+              <span class="errors"><?php echo $errors['name']; ?> </span>
+            <?php endif;?>
+            </td>
+          </tr>
+          <tr>
+            <td class="item">メールアドレス <span class="required">(必須)</span></td>
+            <td class="input"><input type="email" name="email"
+            <?php if(!empty($email)) :?>
+              value="<?php echo h($email); ?>"
+            <?php endif; ?>
+            class="input_email">
+             <?php if(empty($email)) :?>
+              <span class="errors"><?php echo $errors['email']; ?> </span>
+            <?php endif;?>
+            </td>
+          </tr>
+          <tr>
+          <td class="item">種類 <span class="required">(必須)</span>
+          </td>
+          <td class="input">
+            <select name="type" class="input_type">
+            <option value="商品について"
+            <?php if($type == "商品について"): ?>
+            selected
+            <?php endif; ?>
+            >商品について</option>
+            <option value="お支払いについて"
+            <?php if($type == "お支払いについて"): ?>
+            selected
+            <?php endif; ?>
+            >お支払いについて</option>
+            <option value="当サイトについて"
+            <?php if($type == "当サイトについて"): ?>
+            selected
+            <?php endif; ?>
+            >当サイトについて</option>
+            <option value="その他"
+            <?php if($type == "その他"): ?>
+            selected
+            <?php endif; ?>
+            >その他</option>
+            </select>
+          </td>
+          </tr>
+          <tr>
+            <td class="item_inquiry">
+            お問い合わせ内容 <span class="required">(必須)</span>
+            </td>
+            <td class="input_2">
+            <textarea name="content"
+            <?php if(!empty($content)) :?>
+              value="<?php echo h($content); ?>"
+            <?php endif; ?>
+            class="input_inquiry"></textarea>
+            </td>
+          </tr>
+       </table>
+
+       <div class="submit_botton">
+       <input type="submit" name="go" value="確認画面へ" class="confi">
+       </div>
 
       </form>
+      <?php endif; ?>
     </div>
   </body>
 </html>
